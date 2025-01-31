@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_js/flutter_js.dart';
+import 'package:frontend/config.dart';
 import 'package:frontend/inapp_message/utils.dart';
 import 'package:http/http.dart' as http;
 
@@ -17,6 +18,9 @@ class InAppMessageCubit extends Cubit<InAppMessageState> {
   Map _context = {};
 
   Future<void> runJs({required Map event}) async {
+    if (!enableInApps) {
+      return;
+    }
     try {
       final script = await _downloadScript();
       if (script == null) {
@@ -41,8 +45,7 @@ class InAppMessageCubit extends Cubit<InAppMessageState> {
 
   Future<String?> _downloadScript() async {
     try {
-      final response =
-          await http.get(Uri.parse('http://localhost:8000/script'));
+      final response = await http.get(Uri.parse('$baseUrl/script'));
       if (response.statusCode == 200) {
         return response.body;
       } else {

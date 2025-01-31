@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/config.dart';
 import 'package:http/http.dart' as http;
 
 part 'home_state.dart';
@@ -16,8 +17,8 @@ class HomeCubit extends Cubit<HomeState> {
   void load() async {
     emit(HomeLoading());
     try {
-      final response = await http
-          .get(Uri.parse('http://localhost:8000/screen/home_screen/$username'));
+      final response =
+          await http.get(Uri.parse('$baseUrl/screen/home_screen/$username'));
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body);
         emit(HomeLoaded(json));
